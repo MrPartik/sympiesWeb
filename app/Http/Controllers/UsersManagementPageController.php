@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\r_affiliate_info;
 use App\user;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class UsersManagementPageController extends Controller
 {
@@ -41,6 +42,15 @@ class UsersManagementPageController extends Controller
     {
         //
 
+        $user = new user();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->AFF_ID = $request->input('affiliates');
+        $user->save();
+
+        return redirect('admin/users/manage')->with('success','User record was inserted successfully');
+
     }
 
     /**
@@ -53,6 +63,8 @@ class UsersManagementPageController extends Controller
     {
         //
 
+        $user = user::all();
+        return  new JsonResource($user->where('id',$id));
     }
 
     /**
@@ -76,6 +88,15 @@ class UsersManagementPageController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $user =  user::all()->where('id',$id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        ($request->password)?$user->password = bcrypt($request->password):'';
+        $user->AFF_ID = $request->input('affiliates');
+        $user->save();
+
+        return redirect('admin/users/manage')->with('success','User record was updated successfully');
+
     }
 
     /**

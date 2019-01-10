@@ -109,7 +109,7 @@ class InventoryPageController extends Controller
         $prodInfo =  r_product_info::all()->where('PROD_ID',$id)->first();
         $invInfo =  r_inventory_info::with('rProductInfo','tProductVariance','tOrderItem')->where('PROD_ID',$id)->get();
 
-        return  (isset($invInfo))?view('admin.inventory.historyInventory',compact('invInfo','id','prodInfo')):abort('404');
+        return  (isset($invInfo)&&isset($prodInfo))?view('admin.inventory.historyInventory',compact('invInfo','id','prodInfo')):abort('404');
 //        return $invInfo;
     }
 

@@ -29,13 +29,14 @@ class ProductPageController extends Controller
     public function index()
     {
 
+        $aff = r_affiliate_info::all();
         $prodType =  r_product_type::all();
         $taxProf =  r_tax_table_profile::all();
         $prodInfo = r_product_info::with('rAffiliateInfo','rProductType','rTaxTableProfile')->get();
         if(Auth::user()->role=="admin")
-            return view('admin.shop.product',compact('prodType','taxProf','prodInfo'));
+            return view('admin.shop.product',compact('prodType','taxProf','prodInfo','aff'));
         else if(Auth::user()->role=="member")
-            return view('member.shop.product',compact('prodType','taxProf','prodInfo'));
+            return view('member.shop.product',compact('prodType','taxProf','prodInfo','aff'));
         else
             return abort(500);
 

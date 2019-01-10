@@ -201,7 +201,7 @@
                 </div>
                 <div class="box-body">
                     <div class="col-lg-12">
-                        <center><img name="prodImage" class="img-responsive pad" width="100%"  src="" alt=""></center>
+                        <center><img name="prodImage" class="img-responsive pad" width="75%"  src="" alt=""></center>
                         <center><strong><span style="font-size:20px" name="prodname" ></span></strong> - <span name="prodtype" class="text-muted"></span></center>
                         <br>
                         <span name="prodprice" class="pull-right text-muted"></span>
@@ -243,6 +243,29 @@
                                     <div class="form-group">
                                         <label>Product Name*</label>
                                         <input class="form-control" name=prodname placeholder="Product Name" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Affiliate*</label>
+                                        <select class="form-control " name="affiliates" style="width: 100%;" required>
+                                            <option selected="selected"  disabled>Please Select Affiliate</option>
+                                            @foreach($aff as $item)
+                                                <option value={{$item->AFF_ID}} >{{$item->AFF_NAME}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Availablabiliy*</label>
+                                        <div class="input-group">
+                                            <input type="number" placeholder="0" name="days" class="form-control" required>
+                                            <div class="input-group-addon">
+                                                #
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -305,6 +328,9 @@
                                         </div>
                                     </div>
                                 </div>
+
+
+
 
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -566,6 +592,7 @@
         //     'width':'100%',});
         $("textarea[name='prodnote']").wysihtml5();
         $('.productType').select2();
+        $('select[name=affiliates]').select2();
         // $('.productColor').select2();
         // $('.productSize').select2();
         $('.productTax').select2();

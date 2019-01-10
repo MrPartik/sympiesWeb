@@ -144,7 +144,7 @@
                     <h3 class="box-title">Affiliates Setup</h3>
 
                     <div class="box-tools pull-right">
-                        <a href="#affsetup" id="addTax" class="btn btn-success" data-toggle="modal"><i class="fa fa-plus"></i> Add Item</a>
+                        <a href="#affsetup" id="addAFF" class="btn btn-success" data-toggle="modal"><i class="fa fa-plus"></i> Add Item</a>
                     </div>
                 </div>
                 <!-- /.box-header -->
@@ -175,7 +175,7 @@
 
                                                 @endif
                                                 @if($item->AFF_DISPLAY_STATUS ==1)
-                                                    <a class="btn btn-info" id='editTax'data-toggle="modal" vals="{{$item->AFF_ID }}" href="#affsetup"><i class="fa fa-pencil"></i></a>
+                                                    <a class="btn btn-info" id='editAff'data-toggle="modal" vals="{{$item->AFF_ID }}" href="#affsetup"><i class="fa fa-pencil"></i></a>
                                                     <a id=deact  vals="{{$item->AFF_ID }}" class="btn btn-danger" data-toggle="modal" data-target="#deactivate"><i class="fa fa-ban"></i></a>
                                                 @else
                                                     <a id=act  vals="{{$item->AFF_ID }}" class="btn btn-success" data-toggle="modal" data-target="#activate"><i class="fa fa-rotate-left"></i></a>
@@ -229,11 +229,10 @@
             message: '{{session('error')}}',
         });
         @endif
-        $("a[id='addTax']").on('click',function(){
+        $("a[id='addAFF']").on('click',function(){
             document.querySelector('#affModal').reset();
         });
-        $("a[id='editTax']").on('click',function () {
-            $('.modal-title').html('Editing Tax Reference');
+        $("a[id='editAff']").on('click',function () {
             document.querySelector('#affModal').reset();
             $id = $(this).attr('vals');
             $.ajax({
