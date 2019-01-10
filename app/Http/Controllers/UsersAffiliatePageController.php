@@ -6,7 +6,7 @@ use App\r_affiliate_info;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UsersPageController extends Controller
+class UsersAffiliatePageController extends Controller
 {
     /**
      * Display a listing of the resource.

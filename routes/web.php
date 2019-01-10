@@ -31,7 +31,7 @@ Route::get('/cart/view','CartPageController@view_cart')->name('Cart');
 
 Route::post('/product/actDeact','ProductPageController@actDeact');
 Route::post('/tax/actDeact','TaxPageController@actDeact');
-Route::post('/affiliate/actDeact','UsersPageController@actDeact');
+Route::post('/affiliate/actDeact','UsersAffiliatePageController@actDeact');
 Route::post('/category/actDeact','ProdCategoryPageController@actDeact');
 
 Route::post('/product/appDisapprove','ProductPageController@appDisapprove');
@@ -62,7 +62,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::resource('admin/shop/category','ProdCategoryPageController',['names' => ['index' => 'Product Category',]]);
     Route::resource('admin/shop/subcategory','ProdCategoryPageController',['names' => ['index' => 'Product Sub-Category',]]);
 
-    Route::resource('admin/users/affiliate','UsersPageController',['names' => ['index' => 'Affiliates Management',]]);
+    Route::resource('admin/users/affiliate','UsersAffiliatePageController',['names' => ['index' => 'Affiliates Management',]]);
     Route::get('admin/users/manage', function () {return view('admin.users.manage');})->name('User Management');
     Route::get('admin/users/track', function () {return view('admin.users.track');})->name('Track Users');
 
