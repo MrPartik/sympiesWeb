@@ -33,7 +33,7 @@ class userController extends Controller
      */
     public function store()
     {
-        //
+
     }
 
     /**

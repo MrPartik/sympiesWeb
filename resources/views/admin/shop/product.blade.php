@@ -115,13 +115,9 @@
                                         <td>
 
                                             Base Price: {{$item->PROD_BASE_PRICE}} <br>
-                                            Selling Price: @if($item->PROD_IS_APPROVED==1)
-                                                {{ (($item->PROD_REBATE/100)* $item->PROD_BASE_PRICE)
+                                            Selling Price: {{$total=($item->PROD_IS_APPROVED==1)?(($item->PROD_REBATE/100)* $item->PROD_BASE_PRICE)
                                             +(($item->rTaxTableProfile->TAXP_TYPE==0)?($item->rTaxTableProfile->TAXP_RATE/100)* $item->PROD_BASE_PRICE:($item->rTaxTableProfile->TAXP_RATE)+ $item->PROD_BASE_PRICE)
-                                            +(($item->PROD_MARKUP/100)* $item->PROD_BASE_PRICE)+$item->PROD_BASE_PRICE }}
-                                            @else
-                                                <label style="color:red">###</label>
-                                            @endif
+                                            +(($item->PROD_MARKUP/100)* $item->PROD_BASE_PRICE)+$item->PROD_BASE_PRICE:'NAN'}}
                                         </td>
                                         <td data-order="{{$item->created_at}}">{{ (new DateTime($item->created_at))->format('D M d, Y | h:i A') }}</td>
 
@@ -153,13 +149,13 @@
                                                         </button>
                                                         <ul class="dropdown-menu" role="menu">
                                                         @if(Auth::user()->AFF_ID == $item->AFF_ID)
-                                                                    <li> <a  id='viewProduct' href="#viewProd" data-toggle="modal" vals="{{$item->PROD_ID}}" >View</a></li>
+                                                                    <li> <a  id='viewProduct' total="{{$total}}" href="#prodView" data-toggle="modal" vals="{{$item->PROD_ID}}" >View</a></li>
                                                                     <li> <a  id='editProduct' href="#productsetup" data-toggle="modal" vals="{{$item->PROD_ID}}">Edit Product Info</a></li>
                                                                     <li> <a  id='editVariance' href="#productVariance" data-toggle="modal" vals="{{$item->PROD_ID}}" onclick="$('input[id=varProdID]').val({{$item->PROD_ID}});" >Product Variance</a></li>
                                                                     <li class="divider"></li>
                                                                     <li> <a  id=deact href="#"  vals="{{$item->PROD_ID}}"  >Deactivate</a></li>
                                                             @else
-                                                                    <li> <a  id='viewProduct' href="#viewProd" data-toggle="modal" vals="{{$item->PROD_ID}}" >View</a></li>
+                                                                    <li> <a  id='viewProduct' total="{{$total}}" href="#prodView" data-toggle="modal" vals="{{$item->PROD_ID}}" >View</a></li>
                                                                     <li class="divider"></li>
                                                                     <li> <a  id=deact href="#"  vals="{{$item->PROD_ID}}"  >Deactivate</a></li>
                                                             @endif
@@ -195,6 +191,35 @@
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
+
+
+    <div class="modal modal-default fade" id="prodView" >
+        <div class="modal-dialog" style="width: 500px" >
+            <div class="box box-info box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Product Information</h3>
+                </div>
+                <div class="box-body">
+                    <div class="col-lg-12">
+                        <center><img name="prodImage" class="img-responsive pad" width="100%"  src="" alt=""></center>
+                        <center><strong><span style="font-size:20px" name="prodname" ></span></strong> - <span name="prodtype" class="text-muted"></span></center>
+                        <br>
+                        <span name="prodprice" class="pull-right text-muted"></span>
+                        <p style="color:darkslategray" name="proddesc"></p>
+                    </div>
+                    <br>
+                    <div class="col-lg-12">
+                        <div name="prodnote"></div>
+                    </div>
+                </div>
+                <div id="overlay" class="overlay" style="display:none">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
 
@@ -662,6 +687,49 @@
                 }
                 ,error:function(){}
                 });
+
+        });
+
+
+        $("a[id='viewProduct']").on('click',function () {
+
+            document.querySelector('#productModal').reset();
+
+            $id = $(this).attr('vals');
+            $total = $(this).attr('total');
+            $.ajax({
+                url: 'product/'+$id
+                ,type: 'get'
+                ,data: {_token:CSRF_TOKEN }
+                ,dataType:'json'
+                ,success:function($data){
+                    $("img[name=prodImage]").attr('src',$data.data[1].IMG);
+
+                    $("input[name='prodcode']").val($data.data[0].PROD_CODE);
+                    $("p[name='proddesc']").text($data.data[0].PROD_DESC);
+                    $("span[name='prodname']").text($data.data[0].PROD_NAME);
+                    $("div[name='prodnote']").html($data.data[0].PROD_NOTE);
+                    $("span[name='prodprice']").text($data.data[0].PROD_BASE_PRICE+' + '+$data.data[0].PROD_REBATE+'% '
+                    +' + '+$data.data[0].PROD_MARKUP+'% = '+$total);
+                    $("span[name='prodtype']").text($data.data[0].r_product_type.PRODT_TITLE);
+
+
+                    $("input[name='baseprice']").val($data.data[0].PROD_BASE_PRICE);
+                    $("input[name='prodrebate']").val($data.data[0].PROD_REBATE);
+                    $("select[name='prodtax']").val($data.data[0].TAXP_ID).trigger('change');
+                    $("input[name='prodmarkup']").val($data.data[0].PROD_MARKUP);
+                    $("input[name='inv_qty']").val($data.data[0].PROD_QTY);
+                    $("input[name='inv_critical']").val($data.data[0].PROD_CRITICAL);
+                    var editorObj = $("textarea[name='prodnote']").data('wysihtml5');
+                    var editor = editorObj.editor;
+                    editor.setValue($data.data[0].PROD_NOTE);
+                    $('#productModal').attr('action','{{url('admin/shop/product')}}/'+$data.data[0].PROD_ID);
+                    $("input[name='_method']").attr('value','PATCH');
+                }
+                ,error:function(){
+
+                }
+            });
 
         });
 

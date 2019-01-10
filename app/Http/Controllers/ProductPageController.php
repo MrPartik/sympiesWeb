@@ -20,6 +20,8 @@ use Intervention\Image\Facades\Image;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ProductExport;
 use App\Http\Controllers\Controller;
+use Psy\Util\Json;
+use Illuminate\Support\Facades\DB;
 
 class ProductPageController extends Controller
 {
@@ -132,9 +134,12 @@ class ProductPageController extends Controller
     {
         $prodInfo = r_product_info::with('rAffiliateInfo','rProductType')
             ->get(['PROD_CODE','PROD_ID','PROD_BASE_PRICE','PRODT_ID','PROD_DESC'
-                ,'PROD_IMG','PROD_NAME','PROD_REBATE','TAXP_ID','PROD_MARKUP','PROD_NOTE','PROD_QTY','PROD_CRITICAL']);
+                ,'PROD_IMG','PROD_NAME','PROD_REBATE','TAXP_ID','PROD_MARKUP','PROD_NOTE','PROD_QTY','PROD_CRITICAL'])
+            ->where('PROD_ID',$id)->toArray();
+        $image = DB::Select('select PROD_IMG from r_product_infos where PROD_ID ='.$id)[0]->PROD_IMG;
 
-        return  new JsonResource($prodInfo->where('PROD_ID',$id));
+        $img = array(['IMG'=>asset(($image)?$image:'uPackage.png')]);
+        return  new JsonResource(array_merge($prodInfo,$img));
     }
 
     public function edit($id)
