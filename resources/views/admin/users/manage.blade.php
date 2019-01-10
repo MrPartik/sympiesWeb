@@ -7,23 +7,23 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Tax Reference
+                User Management
                 <small>Overview</small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-tag"></i> Tax Reference</a></li>
+                <li><a href="#"><i class="fa fa-users"></i> User Management</a></li>
             </ol>
         </section>
 
 
-        <div class="modal modal-default fade" id="taxreferencesetup" >
+        <div class="modal modal-default fade" id="usersetup" >
             <div class="modal-dialog">
                 <div class="box box-warning box-solid">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Tax Reference</h3>
+                        <h3 class="box-title">User Management</h3>
                     </div>
                     <div class="box-body">
-                        <form method="post" id="taxModal" action="{{url('admin/shop/tax')}}"  enctype="multipart/form-data">
+                        <form method="post" id="userModal" action="{{url('admin/users/manage')}}"  enctype="multipart/form-data">
                             {{csrf_field()}}
                             <input type="hidden" name="_method" value="POST" />
                             <div class="row">
@@ -31,35 +31,36 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Name</label>
-                                            <input class="form-control" name=taxname placeholder="Name" required>
+                                            <input class="form-control" name=affname placeholder="Name" required>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Rate</label>
-                                            <input class="form-control" name=taxrate type="number" placeholder="Rate" required>
+                                            <label>Code</label>
+                                            <input class="form-control" name=code type="text" placeholder="Code" required>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Type</label>
-                                            <select class="form-control " name="taxtype" style="width: 100%;" required>
-                                                <option selected="selected"  disabled>Please Select Type</option>
-                                                <option value=0 >Percentage</option>
-                                                <option value=1 >Fixed</option>
-
-                                            </select>
+                                            <label>Payment Mode</label>
+                                            <input class="form-control" name=paymentmode type="text" placeholder="Payment Mode" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Payment Instruction</label>
+                                            <textarea class="form-control" name=paymentinst style="resize:vertical; width:100%;height:107px" placeholder="Payment Instruction" required></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Description</label>
-                                            <textarea class="form-control" name=taxdesc style="resize:vertical; width:100%;height:107px" placeholder="Description" required></textarea>
+                                            <textarea class="form-control" name=desc style="resize:vertical; width:100%;height:107px" placeholder="Affiliate Description" required></textarea>
                                         </div>
                                     </div>
-                            <!-- /.row -->
+                                    <!-- /.row -->
                                 </div>
                                 <div class="col-md-12" >
                                     <div class="pull-right" style="margin-right: 10px;">
@@ -82,44 +83,68 @@
         <!-- /.modal -->
 
 
-        <!-- Main content -->
+        @foreach($aff as $item)
+
+            <div class="modal modal-default fade" id="hasUser{{$item->AFF_ID }}" >
+                <div class="modal-dialog" style="width: 1000px" >
+                    <div class="box box-info box-solid">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{$item->AFF_NAME}}</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-lg-12">
+                                <table id="example2" class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 30%">Name</th>
+                                        <th>Email</th>
+                                        <th>Date Issued</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach(\App\user::all()->where('AFF_ID',$item->AFF_ID) as $item1)
+                                        <tr>
+                                            <td><strong>{{ $item1->name }}</strong></td>
+                                            <td>{{$item1->email}}</td>
+                                            <td>{{ (new DateTime($item1->created_at))->format('D M d, Y | h:i A') }}</td>
+                                            <td>{{ $item1->role}}</td>
+                                            <td>{{ ($item1->USER_DisplayStat==0)?'Inactive':'Active'}}</td>
+
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                    <th style="width: 30%">Name</th>
+                                    <th>Email</th>
+                                    <th>Date Issued</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="overlay" class="overlay" style="display:none">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    @endforeach
+
+
+    <!-- Main content -->
         <section class="content">
-            {{--<div class="row">--}}
 
-                {{--<div class="col-md-3 col-sm-6 col-xs-12">--}}
-                    {{--<div class="info-box">--}}
-                        {{--<span class="info-box-icon bg-aqua"><i class="fa fa-shopping-cart"></i></span>--}}
-
-                        {{--<div class="info-box-content">--}}
-                            {{--<span class="info-box-text">--sample--</span>--}}
-                            {{--<span class="info-box-number">1,410</span>--}}
-                        {{--</div>--}}
-                        {{--<!-- /.info-box-content -->--}}
-                    {{--</div>--}}
-                    {{--<!-- /.info-box -->--}}
-                {{--</div>--}}
-
-                {{--<div class="col-md-3 col-sm-6 col-xs-12">--}}
-                    {{--<div class="info-box">--}}
-                        {{--<span class="info-box-icon bg-green"><i class="fa fa-users"></i></span>--}}
-
-                        {{--<div class="info-box-content">--}}
-                            {{--<span class="info-box-text">--sample--</span>--}}
-                            {{--<span class="info-box-number">10</span>--}}
-                        {{--</div>--}}
-                        {{--<!-- /.info-box-content -->--}}
-                    {{--</div>--}}
-                    <!-- /.info-box -->
-                {{--</div>--}}
-
-            {{--</div>--}}
 
             <div class="box box-success box-solid">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Tax Reference Setup</h3>
+                    <h3 class="box-title">Affiliates Setup</h3>
 
                     <div class="box-tools pull-right">
-                        <a href="#taxreferencesetup" id="addTax" class="btn btn-success" data-toggle="modal"><i class="fa fa-plus"></i> Add Item</a>
+                        <a href="#usersetup" id="addTax" class="btn btn-success" data-toggle="modal"><i class="fa fa-plus"></i> Add Item</a>
                     </div>
                 </div>
                 <!-- /.box-header -->
@@ -130,27 +155,30 @@
                                 <thead>
                                 <tr>
                                     <th style="width: 30%">Info</th>
-                                    <th>Type</th>
-                                    <th>Rate</th>
+                                    <th>Code</th>
+                                    <th>Payment Mode</th>
                                     <th>Date Issued</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($tax as $item)
+                                @foreach($aff as $item)
                                     <tr>
-                                        {{--<td>{{ $affInfo->where('AFF_ID', $item->AFF_ID)->first()->AFF_NAME }}</td>--}}
-                                        <td><strong>{{ $item->TAXP_NAME }}</strong><br><i>{{ $item->TAXP_DESC }}</i> </td>
-                                        <td>@if($item->TAXP_TYPE ==0 )Percent @else Fixed @endif </td>
-                                        <td>{{ $item->TAXP_RATE  }}</td>
+                                        <td><strong>{{ $item->AFF_NAME }}</strong><br><i>{{ $item->AFF_COD }}</i> </td>
+                                        <td>{{$item->AFF_CODE}}</td>
+                                        <td>{{ $item->AFF_PAYMENT_MODE   }}</td>
                                         <td>{{ (new DateTime($item->created_at))->format('D M d, Y | h:i A') }}</td>
                                         <td>
                                             <center>
-                                                @if($item->TAXP_DISPLAY_STATUS==1)
-                                                    <a class="btn btn-info" id='editTax'data-toggle="modal" vals="{{$item->TAXP_ID}}" href="#taxreferencesetup"><i class="fa fa-pencil"></i></a>
-                                                    <a id=deact  vals="{{$item->TAXP_ID}}" class="btn btn-danger" data-toggle="modal" data-target="#deactivate"><i class="fa fa-ban"></i></a>
+                                                @if(!is_null(\App\user::all()->where('AFF_ID',$item->AFF_ID)->first()))
+                                                    <a class="btn btn-success"  data-toggle="modal" vals="{{$item->AFF_ID }}" href="#hasUser{{$item->AFF_ID }}"><i class="fa fa-user"></i></a>
+
+                                                @endif
+                                                @if($item->AFF_DISPLAY_STATUS ==1)
+                                                    <a class="btn btn-info" id='editTax'data-toggle="modal" vals="{{$item->AFF_ID }}" href="#usersetup"><i class="fa fa-pencil"></i></a>
+                                                    <a id=deact  vals="{{$item->AFF_ID }}" class="btn btn-danger" data-toggle="modal" data-target="#deactivate"><i class="fa fa-ban"></i></a>
                                                 @else
-                                                    <a id=act  vals="{{$item->TAXP_ID}}" class="btn btn-success" data-toggle="modal" data-target="#activate"><i class="fa fa-rotate-left"></i></a>
+                                                    <a id=act  vals="{{$item->AFF_ID }}" class="btn btn-success" data-toggle="modal" data-target="#activate"><i class="fa fa-rotate-left"></i></a>
                                                 @endif
                                             </center>
                                         </td>
@@ -159,8 +187,8 @@
                                 </tbody>
                                 <tfoot>
                                 <th style="width: 30%">Info</th>
-                                <th>Type</th>
-                                <th>Rate</th>
+                                <th>Code</th>
+                                <th>Payment Mode</th>
                                 <th>Date Issued</th>
                                 <th>Action</th>
                                 </tfoot>
@@ -202,24 +230,25 @@
         });
         @endif
         $("a[id='addTax']").on('click',function(){
-            document.querySelector('#taxModal').reset();
+            document.querySelector('#userModal').reset();
         });
         $("a[id='editTax']").on('click',function () {
             $('.modal-title').html('Editing Tax Reference');
-            document.querySelector('#taxModal').reset();
+            document.querySelector('#userModal').reset();
             $id = $(this).attr('vals');
             $.ajax({
-                url: 'tax/'+$id
+                url: '/admin/users/affiliate/'+$id
                 ,type: 'get'
                 ,data: {_token:CSRF_TOKEN }
                 ,dataType:'json'
                 ,success:function($data){
 
-                    $("input[name='taxname']").val($data.data[0].TAXP_NAME);
-                    $("textarea[name='taxdesc']").val($data.data[0].TAXP_DESC);
-                    $("select[name='taxtype']").val($data.data[0].TAXP_TYPE).trigger('change');
-                    $("input[name='taxrate']").val($data.data[0].TAXP_RATE);
-                    $('#taxModal').attr('action','{{url('admin/shop/tax')}}/'+$data.data[0].TAXP_ID);
+                    $("input[name='affname']").val($data.data[0].AFF_NAME);
+                    $("textarea[name='desc']").val($data.data[0].AFF_DESC);
+                    $("textarea[name='paymentinst']").val($data.data[0].AFF_PAYMENT_INSTRUCTION);
+                    $("input[name='paymentmode']").val($data.data[0].AFF_PAYMENT_MODE);
+                    $("input[name='code']").val($data.data[0].AFF_CODE);
+                    $('#userModal').attr('action','{{url('admin/users/affiliate')}}/'+$data.data[0].AFF_ID);
                     $("input[name='_method']").attr('value','PATCH');
                 }
                 ,error:function(){
@@ -229,7 +258,7 @@
 
         });
 
-        $('#example2').DataTable({
+        $('table[id=example2]'  ).DataTable({
             'paging'      : true,
             'lengthChange': true,
             'searching'   : true,
@@ -239,27 +268,27 @@
             ,   buttons: [
                 { extend: 'copy', className: 'btn-sm',
                     exportOptions: {
-                        columns: [0,1,2,3]
+                        columns: [0,1,2,3,4]
                     }
                 },
                 { extend: 'csv', className: 'btn-sm' ,
                     exportOptions: {
-                        columns: [0,1,2,3]
+                        columns: [0,1,2,3,4]
                     }
                 },
                 { extend: 'excel', className: 'btn-sm',
                     exportOptions: {
-                        columns: [0,1,2,3]
+                        columns: [0,1,2,3,4]
                     }
                 },
                 { extend: 'pdf', className: 'btn-sm',
                     exportOptions: {
-                        columns: [0,1,2,3]
+                        columns: [0,1,2,3,4]
                     }
                 },
                 { extend: 'print', className: 'btn-sm',
                     exportOptions: {
-                        columns: [0,1,2,3]
+                        columns: [0,1,2,3,4]
                     }
                 },
 
@@ -286,7 +315,7 @@
                 if (isConfirm) {
 
                     $.ajax({
-                        url: '/tax/actDeact'
+                        url: '/affiliate/actDeact'
                         ,type: 'post'
                         ,data: {id:$id,_token:CSRF_TOKEN, type:0  }
                         ,success:function(){
@@ -320,7 +349,7 @@
             }, function (isConfirm) {
                 if (isConfirm) {
                     $.ajax({
-                        url: '/tax/actDeact'
+                        url: '/affiliate/actDeact'
                         ,type: 'post'
                         ,data: {id:$id,_token:CSRF_TOKEN, type:1  }
                         ,success:function(){

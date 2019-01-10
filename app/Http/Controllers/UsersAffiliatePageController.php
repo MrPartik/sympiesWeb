@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\r_affiliate_info;
+use App\user;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,7 +17,8 @@ class UsersAffiliatePageController extends Controller
     public function index()
     {
         $aff = r_affiliate_info::all();
-        return view('admin.users.affiliate',compact('aff'));
+        $user = user::all();
+        return view('admin.users.affiliate',compact('aff','user'));
     }
 
     /**

@@ -63,7 +63,7 @@ Route::group(['middleware' => ['admin']], function () {
     Route::resource('admin/shop/subcategory','ProdCategoryPageController',['names' => ['index' => 'Product Sub-Category',]]);
 
     Route::resource('admin/users/affiliate','UsersAffiliatePageController',['names' => ['index' => 'Affiliates Management',]]);
-    Route::get('admin/users/manage', function () {return view('admin.users.manage');})->name('User Management');
+    Route::resource('admin/users/manage','UsersManagementPageController',['names' => ['index' => 'User Management',]]);
     Route::get('admin/users/track', function () {return view('admin.users.track');})->name('Track Users');
 
 });

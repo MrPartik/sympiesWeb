@@ -277,8 +277,8 @@
             </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{{Request::is('admin/users/affiliate')?'active':''}}"><a href="{{url('admin/users/affiliate')}}"><i class="fa fa-angle-right"></i>Manage Affiliates</a></li>
                         <li class="{{Request::is('admin/users/manage')?'active':''}}"><a href="{{url('admin/users/manage')}}"><i class="fa fa-angle-right"></i>Manage Users</a></li>
+                        <li class="{{Request::is('admin/users/affiliate')?'active':''}}"><a href="{{url('admin/users/affiliate')}}"><i class="fa fa-angle-right"></i>Manage Affiliates</a></li>
                         <li class="{{Request::is('admin/users/track')?'active':''}}"><a href="{{url('admin/users/track')}}"><i class="fa fa-angle-right"></i>Last Login</a></li>
                     </ul>
                 </li>

@@ -16,7 +16,7 @@
         </section>
 
 
-        <div class="modal modal-default fade" id="taxreferencesetup" >
+        <div class="modal modal-default fade" id="affsetup" >
             <div class="modal-dialog">
                 <div class="box box-warning box-solid">
                     <div class="box-header with-border">
@@ -83,7 +83,59 @@
         <!-- /.modal -->
 
 
-        <!-- Main content -->
+        @foreach($aff as $item)
+
+            <div class="modal modal-default fade" id="hasUser{{$item->AFF_ID }}" >
+                <div class="modal-dialog" style="width: 1000px" >
+                    <div class="box box-info box-solid">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{$item->AFF_NAME}}</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-lg-12">
+                                <table id="example2" class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 30%">Name</th>
+                                        <th>Email</th>
+                                        <th>Date Issued</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($user->where('AFF_ID',$item->AFF_ID) as $item1)
+                                        <tr>
+                                            <td><strong>{{ $item1->name }}</strong></td>
+                                            <td>{{$item1->email}}</td>
+                                            <td>{{ (new DateTime($item1->created_at))->format('D M d, Y | h:i A') }}</td>
+                                            <td>{{ $item1->role}}</td>
+                                            <td>{{ ($item1->USER_DisplayStat==0)?'Inactive':'Active'}}</td>
+
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <th style="width: 30%">Name</th>
+                                        <th>Email</th>
+                                        <th>Date Issued</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="overlay" class="overlay" style="display:none">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    @endforeach
+
+
+    <!-- Main content -->
         <section class="content">
 
 
@@ -92,7 +144,7 @@
                     <h3 class="box-title">Affiliates Setup</h3>
 
                     <div class="box-tools pull-right">
-                        <a href="#taxreferencesetup" id="addTax" class="btn btn-success" data-toggle="modal"><i class="fa fa-plus"></i> Add Item</a>
+                        <a href="#affsetup" id="addTax" class="btn btn-success" data-toggle="modal"><i class="fa fa-plus"></i> Add Item</a>
                     </div>
                 </div>
                 <!-- /.box-header -->
@@ -118,8 +170,12 @@
                                         <td>{{ (new DateTime($item->created_at))->format('D M d, Y | h:i A') }}</td>
                                         <td>
                                             <center>
+                                                @if(!is_null($user->where('AFF_ID',$item->AFF_ID)->first()))
+                                                    <a class="btn btn-success"  data-toggle="modal" vals="{{$item->AFF_ID }}" href="#hasUser{{$item->AFF_ID }}"><i class="fa fa-user"></i></a>
+
+                                                @endif
                                                 @if($item->AFF_DISPLAY_STATUS ==1)
-                                                    <a class="btn btn-info" id='editTax'data-toggle="modal" vals="{{$item->AFF_ID }}" href="#taxreferencesetup"><i class="fa fa-pencil"></i></a>
+                                                    <a class="btn btn-info" id='editTax'data-toggle="modal" vals="{{$item->AFF_ID }}" href="#affsetup"><i class="fa fa-pencil"></i></a>
                                                     <a id=deact  vals="{{$item->AFF_ID }}" class="btn btn-danger" data-toggle="modal" data-target="#deactivate"><i class="fa fa-ban"></i></a>
                                                 @else
                                                     <a id=act  vals="{{$item->AFF_ID }}" class="btn btn-success" data-toggle="modal" data-target="#activate"><i class="fa fa-rotate-left"></i></a>
@@ -202,7 +258,7 @@
 
         });
 
-        $('#example2').DataTable({
+        $('table[id=example2]'  ).DataTable({
             'paging'      : true,
             'lengthChange': true,
             'searching'   : true,
@@ -212,27 +268,27 @@
             ,   buttons: [
                 { extend: 'copy', className: 'btn-sm',
                     exportOptions: {
-                        columns: [0,1,2,3]
+                        columns: [0,1,2,3,4]
                     }
                 },
                 { extend: 'csv', className: 'btn-sm' ,
                     exportOptions: {
-                        columns: [0,1,2,3]
+                        columns: [0,1,2,3,4]
                     }
                 },
                 { extend: 'excel', className: 'btn-sm',
                     exportOptions: {
-                        columns: [0,1,2,3]
+                        columns: [0,1,2,3,4]
                     }
                 },
                 { extend: 'pdf', className: 'btn-sm',
                     exportOptions: {
-                        columns: [0,1,2,3]
+                        columns: [0,1,2,3,4]
                     }
                 },
                 { extend: 'print', className: 'btn-sm',
                     exportOptions: {
-                        columns: [0,1,2,3]
+                        columns: [0,1,2,3,4]
                     }
                 },
 

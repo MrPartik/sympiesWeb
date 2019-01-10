@@ -220,9 +220,6 @@
     </div>
 
 
-
-
-
     <div class="modal modal-default fade" id="productsetup" >
         <div class="modal-dialog" style="width: 1000px" >
             <div class="box box-warning box-solid">
